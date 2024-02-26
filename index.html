@@ -1,0 +1,21 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IEC 61131-3 Enumeration to String</title>
+  <script>
+    document.addEventListener("DOMContentLoaded", (event) => {
+      document.getElementById("generate-button").addEventListener("mousedown", (event) => {
+        console.log(document.getElementById("enumeration-definition").value);
+        document.getElementById("paragraph-result").textContent = document.getElementById("enumeration-definition").value;
+      })
+    })
+  </script>
+</head>
+<body>
+  <p><label for="enumeration-definition">Enumeration Definition</label></p>
+  <p><textarea name="enumeration-definition-input" id="enumeration-definition" cols="50" rows="10"></textarea></p>
+  <p><button id="generate-button" type="button">Generate</button></p>
+  <p id="paragraph-result">Test</p>
+</body>
+</html>
