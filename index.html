@@ -6,7 +6,25 @@
   <script>
     document.addEventListener("DOMContentLoaded", (event) => {
       document.getElementById("generate-button").addEventListener("mousedown", (event) => {
-        console.log(document.getElementById("enumeration-definition").value);
+        var definitionExpression = /(\w+)\s+\:\s+\(\s+(?:\(\*[\w\,\.\s]+\*\)\s*)?([\w\s\,\:\=(?:\(\*)(?:\*\))]+)\)\s*\;/m;
+        var definitionMatch = document.getElementById("enumeration-definition").value.match(definitionExpression);
+        if (definitionMatch == null) {
+          console.log("No enumeration definition match found");
+          return;
+        }
+        console.log("Definition matched at", definitionMatch.index);
+        for (let i = 0; i < definitionMatch.length ; i++) {
+          console.log(definitionMatch[i]);
+        }
+        var index = 0;
+        var enumerationExpression = /(\w+)\s*(?:\:\=\s*\w+\s*)?\,?\s*(?:\(\*.*\*\))?/m;
+        while (true) {
+          let enumerationMatch = definitionMatch[2].slice(index).match(enumerationExpression);
+          if (enumerationMatch == null)
+            break;
+          console.log("Enumeration match", enumerationMatch[1], "at", enumerationMatch.index, "of length", enumerationMatch[0].length);
+          index += enumerationMatch.index + enumerationMatch[0].length;
+        }
         document.getElementById("paragraph-result").textContent = document.getElementById("enumeration-definition").value;
       })
     })
