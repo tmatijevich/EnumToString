@@ -4,10 +4,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>IEC 61131-3 Enumeration to String</title>
   <script>
+    // Wait until DOM is loaded
     document.addEventListener("DOMContentLoaded", (event) => {
-      document.getElementById("generate-button").addEventListener("mousedown", (event) => {
+      // When button is clicked
+      document.getElementById("button").addEventListener("mousedown", (event) => {
+        // Match enumeration definition
         var definitionExpression = /(\w+)\s+\:\s+\(\s+(?:\(\*[\w\,\.\s]+\*\)\s*)?([\w\s\,\:\=(?:\(\*)(?:\*\))]+)\)\s*\;/m;
-        var definitionMatch = document.getElementById("enumeration-definition").value.match(definitionExpression);
+        var definitionMatch = document.getElementById("input").value.match(definitionExpression);
         if (definitionMatch == null) {
           console.log("No enumeration definition match found");
           return;
@@ -16,24 +19,38 @@
         for (let i = 0; i < definitionMatch.length ; i++) {
           console.log(definitionMatch[i]);
         }
+        // Match, slice, and store enumerators
         var index = 0;
         var enumerationExpression = /(\w+)\s*(?:\:\=\s*\w+\s*)?\,?\s*(?:\(\*.*\*\))?/m;
+        var list = [];
         while (true) {
           let enumerationMatch = definitionMatch[2].slice(index).match(enumerationExpression);
           if (enumerationMatch == null)
             break;
           console.log("Enumeration match", enumerationMatch[1], "at", enumerationMatch.index, "of length", enumerationMatch[0].length);
           index += enumerationMatch.index + enumerationMatch[0].length;
+          list.push(enumerationMatch[1]);
         }
-        document.getElementById("paragraph-result").textContent = document.getElementById("enumeration-definition").value;
+        // Generate output
+        var output = "CASE MyVariable OF\n";
+        for (let i = 0; i < list.length; i++) {
+          output += "\t" + list[i] + ": MyString := \'" + list[i] + "\';\n";
+        }
+        output += "END_CASE";
+        document.getElementById("output").textContent = output;
       })
     })
   </script>
+  <style>
+    textarea, pre {
+      tab-size: 4;
+    }
+  </style>
 </head>
 <body>
-  <p><label for="enumeration-definition">Enumeration Definition</label></p>
-  <p><textarea name="enumeration-definition-input" id="enumeration-definition" cols="50" rows="10"></textarea></p>
-  <p><button id="generate-button" type="button">Generate</button></p>
-  <p id="paragraph-result">Test</p>
+  <p>Enumeration Definition</p>
+  <p><textarea id="input" cols="120" rows="20"></textarea></p>
+  <p><button id="button">Generate</button></p>
+  <p><pre id="output">Test</pre></p>
 </body>
 </html>
