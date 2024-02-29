@@ -32,9 +32,12 @@
           list.push(enumerationMatch[1]);
         }
         // Generate output
-        var output = "CASE MyVariable OF\n";
+        var output = "CASE " + document.getElementById("step-variable").value + " OF\n";
+        var stringVar = document.getElementById("string-variable").value;
+        var prefix = document.getElementById("prefix").value;
         for (let i = 0; i < list.length; i++) {
-          output += "\t" + list[i] + ": MyString := \'" + list[i] + "\';\n";
+          let listValue = list[i].startsWith(prefix) ? list[i].slice(prefix.length) : list[i];
+          output += "\t" + list[i] + ": " + stringVar + " := \'" + listValue + "\';\n";
         }
         output += "END_CASE";
         document.getElementById("output").textContent = output;
@@ -49,8 +52,17 @@
 </head>
 <body>
   <p>Enumeration Definition</p>
-  <p><textarea id="input" cols="120" rows="20"></textarea></p>
+  <p><textarea id="input" cols="120" rows="20">StepEnum : 
+    ( (*Comments are okay here.*)
+    STEP_OFF, (*Off*)
+    STEP_RUN, (*Run*)
+    STEP_ERROR (*Error*)
+    );
+  </textarea></p>
+  <p>Switch/Case Variable <input id="step-variable" type="text" value="MyStep"> (of enumeration type)</p>
+  <p>String Variable <input id="string-variable" type="text" value="MyString"></p>
+  <p>Trim Prefix <input id="prefix" type="text" value="STEP_"> (optional)</p>
   <p><button id="button">Generate</button></p>
-  <p><pre id="output">Test</pre></p>
+  <p><pre id="output"></pre></p>
 </body>
 </html>
