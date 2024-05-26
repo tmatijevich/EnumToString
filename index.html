@@ -8,11 +8,12 @@
     document.addEventListener("DOMContentLoaded", (event) => {
       // When button is clicked
       document.getElementById("button").addEventListener("mousedown", (event) => {
+        try {
         // Match enumeration definition
         var definitionExpression = /(\w+)\s+\:\s+\(\s+(?:\(\*[\w\,\.\s]+\*\)\s*)?([\w\s\,\:\=(?:\(\*)(?:\*\))]+)\)\s*\;/m;
         var definitionMatch = document.getElementById("input").value.match(definitionExpression);
         if (definitionMatch == null) {
-          console.log("No enumeration definition match found");
+          document.getElementById("output").textContent = "No enumeration definition match found.";
           return;
         }
         console.log("Definition matched at", definitionMatch.index);
@@ -27,7 +28,7 @@
           let enumerationMatch = definitionMatch[2].slice(index).match(enumerationExpression);
           if (enumerationMatch == null)
             break;
-          console.log("Enumeration match", enumerationMatch[1], "at", enumerationMatch.index, "of length", enumerationMatch[0].length);
+          console.log("Enumeration match", enumerationMatch[1], "at", enumerationMatch.index, "of length", enumerationMatch[0].length, enumerationMatch[0]);
           index += enumerationMatch.index + enumerationMatch[0].length;
           list.push(enumerationMatch[1]);
         }
@@ -41,6 +42,10 @@
         }
         output += "END_CASE";
         document.getElementById("output").textContent = output;
+        }
+        catch {
+          document.getElementById("output").textContent = "An error occurred.";
+        }
       })
     })
   </script>
@@ -52,7 +57,7 @@
 </head>
 <body>
   <p>Enumeration Definition</p>
-  <p><textarea id="input" cols="120" rows="20">StepEnum : 
+  <p><textarea id="input" cols="120" rows="20" spellcheck="false">StepEnum : 
     ( (*Comments are okay here.*)
     STEP_OFF, (*Off*)
     STEP_RUN, (*Run*)
